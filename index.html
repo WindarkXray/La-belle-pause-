@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La Belle Pause · Salon de thé & café à Ostwald</title>
+<meta name="author" content="Benjamin Monteiro">
+<!-- Icône d'onglet (favicon) + icône iPhone/Android quand on ajoute le site à l'écran d'accueil -->
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#FBF8F5">
+<meta name="description" content="La Belle Pause, salon de thé et café au 3 rue de l'Île des Pêcheurs à Ostwald. Thés, cafés, pâtisseries maison et plats du jour. Ouvert du lundi au vendredi.">
+<style>
+/* =====================================================================
+   POLICES AUTO-HÉBERGÉES (RGPD) : aucune requête vers Google Fonts.
+   Télécharger les .woff2 (licence libre OFL) sur gwfh.mranftl.com
+   → Gloock (regular) et Instrument Sans (400, 600, 700)
+   et les déposer dans /fonts (public_html/fonts sur Hostinger) avec ces noms exacts.
+   ===================================================================== */
+@font-face{font-family:"Gloock";src:url("fonts/gloock-regular.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Instrument Sans";src:url("fonts/instrument-sans-400.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Instrument Sans";src:url("fonts/instrument-sans-600.woff2") format("woff2");font-weight:500 600;font-display:swap}
+@font-face{font-family:"Instrument Sans";src:url("fonts/instrument-sans-700.woff2") format("woff2");font-weight:700;font-display:swap}
+
+/* =====================================================================
+   LA BELLE PAUSE — site multi-onglets (même principe que l'AK Vigie)
+   Thème vieux rose, inspiré du salon : chêne clair, rotin des suspensions
+   (motif cannage), bouclette crème, miroirs en arche.
+   ===================================================================== */
+:root{
+  /* Couleurs : vieux rose + tons du salon (chêne, rotin, bouclette crème) */
+  --rose:#9E5664; --rose-2:#B06878; --bloc-a:#A85F6D; --bloc-b:#7C3D4A; --rose-moyen:#C08A94; --rose-pale:#F6E7E9;
+  --chene:#C49A6C; --rotin:#DDBF8E; --lin:#F6F2EB; --boucle:#FFFDF9;
+  --encre:#6E3441; --texte:#2A2426; --gris:#665C5F; --fond:#FBF8F5; --carte:#FFFFFF;
+  --trait:rgba(110,52,65,.12); --sur-encre:#FFFFFF;
+  --check:rgba(110,52,65,.07); --dore:var(--rotin); --ivoire:var(--lin);
+  --lueur:rgba(232,196,132,.42); --ombre:0 16px 36px -20px rgba(0,0,0,.18);
+  --serif:"Gloock", Georgia, "Times New Roman", serif;
+  --sans:"Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --nav-h:64px; --tab-h:66px;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --rose:#B06878; --rose-2:#C27A8A; --rose-pale:#2A1F22; --lin:#1F1A1B; --boucle:#231D1E;
+  --encre:#F0CDD3; --texte:#F2ECED; --gris:#B9AFB1; --fond:#171314; --carte:#211B1C;
+  --trait:rgba(240,205,211,.14); --check:rgba(240,205,211,.05); --lueur:rgba(232,196,132,.12); --ombre:0 16px 36px -20px rgba(0,0,0,.7);}}
+:root[data-theme="dark"]{
+  --rose:#B06878; --rose-2:#C27A8A; --rose-pale:#2A1F22; --lin:#1F1A1B; --boucle:#231D1E;
+  --encre:#F0CDD3; --texte:#F2ECED; --gris:#B9AFB1; --fond:#171314; --carte:#211B1C;
+  --trait:rgba(240,205,211,.14); --check:rgba(240,205,211,.05); --lueur:rgba(232,196,132,.12); --ombre:0 16px 36px -20px rgba(0,0,0,.7);}
+*,*::before,*::after{box-sizing:inherit}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--fond);color:var(--texte);font-family:var(--sans);font-size:1rem;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font:inherit}
+:focus-visible{outline:3px solid var(--dore);outline-offset:3px;border-radius:6px}
+.wrap{width:min(1120px,100% - 2.5rem);margin-inline:auto}
+h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.08;margin:0}
+h2{font-size:clamp(2rem,6vw,3.2rem);color:var(--encre)}
+p{margin:0 0 1em}
+.kelsch{background-color:var(--carte);background-image:
+  repeating-linear-gradient(0deg,var(--check) 0 20px,transparent 20px 40px),
+  repeating-linear-gradient(90deg,var(--check) 0 20px,transparent 20px 40px)}
+
+/* ---------- En-tête ---------- */
+.top{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--fond) 90%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--trait)}
+.top .wrap{height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.logo{display:flex;align-items:center;gap:.6rem;font-family:var(--serif);font-size:1.4rem;color:var(--encre);text-decoration:none;white-space:nowrap}
+.logo svg{width:32px;height:32px;flex:none}
+.nav-desk{display:flex;gap:.3rem}
+.nav-desk button{background:none;border:0;padding:.55rem 1rem;border-radius:99px;font-weight:600;color:var(--gris);cursor:pointer}
+.nav-desk button[aria-current="page"]{background:var(--encre);color:var(--sur-encre)}
+.nav-desk button:hover:not([aria-current="page"]){color:var(--encre)}
+.call-top{display:none;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:var(--encre);color:var(--sur-encre)}
+.call-top svg{width:20px;height:20px}
+
+/* ---------- Barre d'onglets mobile (en bas, comme une appli) ---------- */
+.tabbar{display:none}
+@media (max-width:820px){
+  .nav-desk{display:none}
+  .call-top{display:inline-flex}
+  .tabbar{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:0;right:0;bottom:0;z-index:45;
+    background:var(--carte);border-top:1px solid var(--trait);
+    padding-bottom:env(safe-area-inset-bottom,0px);box-shadow:0 -6px 24px rgba(0,0,0,.08)}
+  .tabbar button{background:none;border:0;height:var(--tab-h);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--gris);font-size:.74rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .tabbar svg{width:23px;height:23px}
+  .tabbar button[aria-current="page"]{color:var(--encre)}
+  .tabbar button[aria-current="page"] svg{background:color-mix(in srgb,var(--dore) 35%,transparent);border-radius:99px;padding:2px 14px;width:51px;box-sizing:content-box}
+  main{padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom,0px) + 1rem)}
+}
+
+/* ---------- Pages (onglets) ---------- */
+.page{display:none;animation:apparait .35s ease}
+.page.active{display:block}
+@keyframes apparait{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.page-head{padding:clamp(2.2rem,6vw,4rem) 0 1.6rem}
+.page-head p{color:var(--gris);max-width:52ch;margin-top:.8rem}
+section.bloc{padding-block:clamp(2rem,5vw,3.5rem)}
+
+/* ---------- Badge ouvert/fermé ---------- */
+.status{display:inline-flex;align-items:center;gap:.55rem;font-weight:600;font-size:.92rem;padding:.45rem .9rem;border-radius:99px;background:var(--carte);border:1px solid var(--trait)}
+.status i{width:9px;height:9px;border-radius:50%;background:#A9A9A9;flex:none}
+.status.open i{background:#3BA55C;box-shadow:0 0 0 4px rgba(59,165,92,.18)}
+
+/* ---------- Boutons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;min-height:50px;padding:0 1.5rem;border-radius:99px;font-weight:700;text-decoration:none;border:0;cursor:pointer;transition:transform .12s}
+.btn:active{transform:scale(.97)}
+.btn svg{width:18px;height:18px}
+.btn-encre{background:var(--encre);color:var(--sur-encre)}
+.btn-dore{background:var(--dore);color:#2b2208}
+.btn-ligne{background:transparent;border:1.5px solid var(--encre);color:var(--encre)}
+
+/* ---------- ACCUEIL : hero ---------- */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:2.5rem;align-items:center;padding-block:clamp(2rem,6vw,4.5rem)}
+.hero h1{font-size:clamp(3.4rem,10vw,7.4rem);color:var(--encre);line-height:.92;margin:1.2rem 0 1.4rem}
+.hero .lede{font-size:clamp(1.05rem,2.4vw,1.25rem);color:var(--gris);max-width:36ch}
+.hero .actions{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.8rem}
+.assiette{position:relative;aspect-ratio:1;width:100%;max-width:460px;justify-self:center}
+.assiette .nappe{position:absolute;inset:8% -12% -6% 6%;border-radius:36px;transform:rotate(-6deg)}
+.assiette svg{position:absolute;inset:6%;width:88%;height:88%;filter:drop-shadow(0 24px 30px rgba(0,0,0,.22))}
+.assiette .part{animation:sortie 1.3s cubic-bezier(.2,.7,.2,1) .4s both}
+@keyframes sortie{from{transform:none}to{transform:translate(22px,-15px)}}
+@keyframes sortie-mobile{from{transform:none}to{transform:translate(14px,-10px)}}
+
+/* Chiffres clés vérifiés */
+.faits{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;padding-block:1rem 3rem}
+.fait{background:var(--carte);border:1px solid var(--trait);border-radius:20px;padding:1.3rem 1.4rem}
+.fait b{display:block;font-family:var(--serif);font-weight:400;font-size:1.35rem;color:var(--encre);margin-bottom:.2rem}
+.fait span{color:var(--gris);font-size:.95rem}
+
+/* Présentation + photos */
+.presente{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.5rem,5vw,4rem);align-items:center}
+.presente .intro{font-family:var(--serif);font-size:clamp(1.4rem,3.4vw,1.9rem);line-height:1.25;color:var(--encre);margin:1rem 0 1.2rem}
+.presente p{color:var(--gris);max-width:56ch}
+
+/* =====================================================================
+   EMPLACEMENTS PHOTO
+   Chaque .ph contient une <img src="img/xxx.jpg">. Tant que le fichier
+   n'existe pas, l'image se retire et le cadre affiche son libellé.
+   → Il suffit de déposer les photos dans le dossier /img (public_html/img sur Hostinger)
+     avec le nom exact indiqué (voir liste en bas du fichier).
+   ===================================================================== */
+.ph{position:relative;margin:0;border-radius:22px;overflow:hidden;background:var(--carte);border:2px dashed var(--trait);display:grid;place-items:center;text-align:center;color:var(--gris);font-size:.85rem;padding:1rem;min-height:140px}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ph:has(img){border-style:solid;border-color:transparent}
+.ph span::before{content:"📷";display:block;font-size:1.6rem;margin-bottom:.3rem}
+.photos-2{display:grid;grid-template-columns:1.2fr 1fr;grid-template-rows:200px 200px;gap:.8rem}
+.photos-2 .ph:first-child{grid-row:span 2}
+
+/* Coup de cœur */
+.coeur{display:grid;grid-template-columns:.9fr 1.1fr;border-radius:28px;overflow:hidden;background:var(--encre);color:var(--sur-encre);margin-block:clamp(2rem,6vw,4rem)}
+.coeur .cote{background-color:var(--dore);background-image:
+  repeating-linear-gradient(0deg,rgba(107,30,46,.14) 0 22px,transparent 22px 44px),
+  repeating-linear-gradient(90deg,rgba(107,30,46,.14) 0 22px,transparent 22px 44px);padding:1.5rem;display:grid}
+.coeur .cote .ph{background:rgba(255,255,255,.8);color:#4A1520;border-color:rgba(107,30,46,.3);min-height:240px}
+.coeur .txt{padding:clamp(1.6rem,5vw,3.2rem)}
+.coeur h2{color:inherit;font-size:clamp(1.9rem,5vw,2.8rem)}
+.coeur p{opacity:.88;margin-top:1rem;max-width:46ch}
+
+/* ---------- CARTE ---------- */
+.filtres{display:flex;gap:.5rem;overflow-x:auto;padding:0 0 .8rem;margin-bottom:1rem;scrollbar-width:none;-webkit-overflow-scrolling:touch;position:sticky;top:var(--nav-h);background:var(--fond);z-index:5;padding-top:.8rem}
+.filtres::-webkit-scrollbar{display:none}
+.filtres button{flex:none;min-height:44px;padding:0 1.1rem;border-radius:99px;border:1.5px solid var(--trait);background:var(--carte);color:var(--gris);font-weight:600;cursor:pointer}
+.filtres button[aria-pressed="true"]{background:var(--encre);border-color:var(--encre);color:var(--sur-encre)}
+.categorie{background:var(--carte);border:1px solid var(--trait);border-radius:24px;padding:clamp(1.3rem,4vw,2rem);margin-bottom:1rem}
+.categorie h3{font-size:1.7rem;color:var(--encre);margin-bottom:.4rem}
+.ligne{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:.95rem 0;border-bottom:1px dashed var(--trait)}
+.ligne:last-child{border-bottom:0;padding-bottom:0}
+.ligne b{font-weight:600;font-size:1.02rem}
+.ligne small{display:block;color:var(--gris);font-size:.88rem}
+.prix{font-family:var(--serif);color:var(--encre);font-size:1.1rem;white-space:nowrap}
+.etiquette{display:inline-block;font-size:.75rem;font-weight:700;padding:.15rem .55rem;border-radius:99px;background:color-mix(in srgb,var(--dore) 35%,transparent);color:var(--texte);margin-left:.4rem;vertical-align:2px}
+.encart{display:flex;gap:1rem;align-items:flex-start;background:color-mix(in srgb,var(--dore) 16%,var(--carte));border:1px solid color-mix(in srgb,var(--dore) 50%,transparent);border-radius:20px;padding:1.2rem 1.3rem;margin:1.5rem 0 1rem}
+.encart p{margin:0;color:var(--texte);font-size:.95rem}
+.grille-carte{columns:2 380px;column-gap:1rem}
+.grille-carte .categorie{break-inside:avoid}
+
+/* Mini-galerie de la carte : vignettes 160x160 bordure dorée (comme l'AK Vigie) */
+.vignettes{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2rem}
+.vignettes .ph{width:160px;height:160px;min-height:0;border:3px solid var(--dore);border-radius:18px;font-size:.78rem;padding:.6rem}
+.vignettes .ph:has(img){border:3px solid var(--dore)}
+
+/* ---------- GALERIE ---------- */
+.galerie{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:220px;gap:.8rem}
+.galerie .ph{min-height:0;cursor:zoom-in}
+.galerie .ph.grand{grid-column:span 2;grid-row:span 2}
+.galerie .ph.large{grid-column:span 2}
+.lightbox{position:fixed;inset:0;z-index:60;background:rgba(26,10,12,.92);display:none;place-items:center;padding:1.5rem}
+.lightbox.on{display:grid}
+.lightbox img{max-height:85vh;border-radius:14px}
+.lightbox button{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;width:48px;height:48px;border-radius:50%;border:0;background:#fff;font-size:1.4rem;cursor:pointer}
+
+/* ---------- INFOS & CONTACT ---------- */
+.infos{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.carte-info{background:var(--carte);border:1px solid var(--trait);border-radius:24px;padding:clamp(1.4rem,4vw,2.2rem)}
+.carte-info h3{font-size:1.7rem;color:var(--encre);margin-bottom:1rem}
+table.horaires{width:100%;border-collapse:collapse}
+.horaires td{padding:.7rem 0;border-bottom:1px solid var(--trait)}
+.horaires td:last-child{text-align:right;font-weight:600}
+.horaires tr:last-child td{border-bottom:0}
+.horaires tr.ferme td{color:var(--gris);font-weight:500}
+.horaires tr.today td{color:var(--encre);font-weight:700}
+.horaires tr.today td:first-child::after{content:" · aujourd'hui";font-weight:500;font-size:.8rem;color:var(--gris)}
+.contact{display:flex;gap:.9rem;align-items:center;min-height:64px;padding:.6rem 0;border-bottom:1px solid var(--trait);text-decoration:none}
+.contact:last-of-type{border-bottom:0}
+.contact .ico{width:44px;height:44px;border-radius:14px;background:color-mix(in srgb,var(--encre) 12%,transparent);color:var(--encre);display:grid;place-items:center;flex:none}
+.contact .ico svg{width:21px;height:21px}
+.contact small{display:block;color:var(--gris);font-size:.82rem}
+.contact span{font-weight:600}
+.plan{grid-column:1/-1;position:relative;min-height:230px;border-radius:24px;overflow:hidden;display:flex;align-items:flex-end;justify-content:flex-start;padding:1.3rem;text-decoration:none}
+.plan .rue{position:absolute;background:var(--fond)}
+.plan .pin{position:absolute;left:55%;top:38%;width:54px;height:54px;border-radius:50% 50% 50% 0;transform:translate(-50%,-50%) rotate(-45deg);background:var(--encre);box-shadow:0 10px 24px rgba(0,0,0,.3)}
+.plan .pin::after{content:"";position:absolute;inset:17px;border-radius:50%;background:var(--dore)}
+.traiteur{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap;background:var(--encre);color:var(--sur-encre);border-radius:24px;padding:clamp(1.4rem,4vw,2.2rem)}
+.traiteur h3{font-size:1.7rem}
+.traiteur p{margin:.4rem 0 0;opacity:.85;max-width:48ch}
+
+/* ---------- Pied de page ---------- */
+footer{background:var(--encre);color:var(--sur-encre);padding:clamp(2.5rem,6vw,3.5rem) 0 1.5rem;margin-top:2rem}
+footer{text-align:center}
+.foot-logo{display:flex;flex-direction:column;align-items:center;gap:.7rem;margin-bottom:2.2rem}
+.foot-logo svg{width:52px;height:52px}
+.foot-logo p{opacity:.8;margin:0}
+.foot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;justify-items:center;padding-top:2rem;border-top:1px solid color-mix(in srgb,var(--sur-encre) 20%,transparent)}
+.foot-grid > div{max-width:280px}
+.foot-grid h4::after{content:"";display:block;width:32px;height:2px;background:var(--dore);margin:.55rem auto 0;border-radius:2px}
+.foot-grid h4{font-family:var(--serif);font-weight:400;font-size:1.3rem;margin:0 0 .8rem}
+.foot-grid p,.foot-grid li{font-size:.92rem;opacity:.85;margin:0 0 .35rem}
+.foot-grid ul{list-style:none;margin:0;padding:0}
+.foot-grid a{text-decoration:none}
+.foot-grid a:hover{text-decoration:underline}
+.foot-grid button{background:none;border:0;padding:0;color:inherit;cursor:pointer;font-size:.92rem;opacity:.85;text-align:center}
+.foot-grid button:hover{text-decoration:underline}
+.foot-big{font-family:var(--serif);font-size:clamp(1.8rem,5vw,2.4rem);line-height:1;margin-bottom:.8rem}
+.foot-bas{border-top:1px solid color-mix(in srgb,var(--sur-encre) 20%,transparent);margin-top:2rem;padding-top:1.2rem;display:flex;flex-direction:column;align-items:center;gap:.35rem;font-size:.8rem;opacity:.75}
+/* Pages légales */
+.legal{max-width:760px;padding-bottom:3rem}
+.legal h3{font-size:1.5rem;color:var(--encre);margin:2rem 0 .7rem}
+.legal p,.legal li{color:var(--texte);font-size:.97rem}
+.legal dl{display:grid;grid-template-columns:auto 1fr;gap:.45rem 1.2rem;margin:0;background:var(--carte);border:1px solid var(--trait);border-radius:18px;padding:1.2rem 1.4rem}
+.legal dt{color:var(--gris);font-size:.9rem}
+.legal dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.retour{margin-top:2rem}
+
+/* ---------- Responsive téléphone ---------- */
+@media (max-width:820px){
+  .wrap{width:min(1120px,100% - 2rem)}
+  .hero{grid-template-columns:1fr;gap:.5rem;padding-top:1.2rem}
+  .assiette{max-width:230px;order:-1;margin:0 auto 1.4rem}
+  .assiette .nappe{inset:6% 0 2% 8%;transform:rotate(-5deg)}
+  .assiette .part{animation-name:sortie-mobile}
+  .hero h1{margin:.9rem 0 1rem}
+  .hero .actions{display:grid;grid-template-columns:1fr 1fr}
+  .hero .actions .btn{padding:0 .8rem}
+  .faits{grid-template-columns:1fr;gap:.6rem;padding-bottom:1.5rem}
+  .fait{display:flex;gap:1rem;align-items:baseline;justify-content:space-between;padding:1rem 1.2rem}
+  .fait b{font-size:1.15rem;margin:0}
+  .fait span{text-align:right;font-size:.88rem}
+  .presente{grid-template-columns:1fr}
+  .photos-2{grid-template-rows:150px 150px}
+  .coeur{grid-template-columns:1fr;border-radius:22px}
+  .coeur .cote .ph{min-height:200px}
+  .grille-carte{columns:1}
+  .vignettes{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+  .vignettes .ph{width:auto;height:auto;aspect-ratio:1}
+  .galerie{grid-template-columns:1fr 1fr;grid-auto-rows:150px;gap:.5rem}
+  .infos{grid-template-columns:1fr}
+  .traiteur .btn{width:100%}
+  .foot-grid{grid-template-columns:1fr;gap:1.8rem}
+  .foot-grid button,.foot-grid a{display:inline-block;padding:.35rem 0}
+  .legal dl{grid-template-columns:1fr;gap:.1rem}
+  .legal dd{margin-bottom:.6rem}
+}
+@media (max-width:360px){.hero .actions{grid-template-columns:1fr}}
+/* =====================================================================
+   THÈME DU SALON — vieux rose, chêne, rotin et crème
+   Signature : photos en forme d'ARCHE (comme les miroirs du salon)
+   et motif CANNAGE (comme le rotin des suspensions et des chaises)
+   ===================================================================== */
+body{font-size:1.0625rem;line-height:1.7}
+h2,h3{color:var(--encre)}
+::selection{background:var(--rose-pale)}
+:focus-visible{outline-color:var(--rose-moyen)}
+
+/* Motif cannage réutilisable */
+.cannage,.coeur .cote,footer::before{background-color:var(--lin);background-image:
+  radial-gradient(circle,transparent 3.2px,var(--rotin) 3.6px,var(--rotin) 4.6px,transparent 5px),
+  linear-gradient(45deg,transparent 46%,color-mix(in srgb,var(--rotin) 55%,transparent) 48% 52%,transparent 54%),
+  linear-gradient(-45deg,transparent 46%,color-mix(in srgb,var(--rotin) 55%,transparent) 48% 52%,transparent 54%);
+  background-size:16px 16px,16px 16px,16px 16px;background-position:0 0,8px 8px,8px 8px}
+
+/* En-tête */
+.top{background:color-mix(in srgb,var(--fond) 85%,transparent);border-bottom:1px solid var(--trait)}
+.logo{color:var(--encre)}
+.nav-desk button{border-radius:99px;color:var(--gris)}
+.nav-desk button[aria-current="page"]{background:var(--rose-pale);color:var(--encre)}
+.nav-desk button:hover:not([aria-current="page"]){color:var(--encre)}
+.call-top{background:var(--rose);color:#fff}
+
+/* Boutons */
+.btn{border-radius:99px;font-weight:700;transition:background .2s,transform .15s}
+.btn-encre{background:var(--rose);color:#fff;box-shadow:0 10px 22px -12px rgba(0,0,0,.3)}
+.btn-encre:hover{background:var(--rose-2)}
+.btn-ligne{background:transparent;border:1.5px solid color-mix(in srgb,var(--encre) 45%,transparent);color:var(--encre)}
+.btn-ligne:hover{border-color:var(--encre)}
+.btn-dore{background:var(--boucle);color:var(--rose)}
+
+/* ---------- HAUT DE PAGE : lumière chaude des suspensions en rotin ---------- */
+.hero,.page-head{position:relative;isolation:isolate}
+.hero::before,.page-head::before{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:calc(50% - 50vw);right:calc(50% - 50vw);background:
+  linear-gradient(180deg,transparent 72%,var(--fond)),
+  radial-gradient(38% 60% at 82% 12%,var(--lueur),transparent 70%),
+  radial-gradient(40% 60% at 6% 55%,var(--rose-pale),transparent 70%),
+  linear-gradient(180deg,var(--lin),var(--fond))}
+.hero{padding-bottom:clamp(3.5rem,8vw,5rem)}
+.page-head{padding-bottom:2.8rem;margin-bottom:.8rem}
+.hero .lede{color:var(--gris)}
+.status{background:var(--carte);border-color:transparent;box-shadow:var(--ombre)}
+
+/* Assiette posée sur une table en chêne clair */
+.assiette .nappe{background-color:#D8B488;background-image:
+  repeating-linear-gradient(92deg,rgba(255,255,255,.14) 0 2px,transparent 2px 9px,rgba(120,80,40,.08) 9px 10px,transparent 10px 17px),
+  linear-gradient(135deg,#E2C29A,#C9A070);border-radius:20px;box-shadow:0 26px 40px -24px rgba(60,40,20,.55)}
+.assiette svg circle[stroke-dasharray]{stroke:var(--rose)}
+.logo svg circle:first-child,.foot-logo svg circle:first-child{fill:var(--rose)}
+
+/* Titre de section : petit filet chêne */
+.presente h2::after,.page-head h2::after{content:"";display:block;width:44px;height:3px;border-radius:3px;background:var(--chene);margin-top:.8rem}
+
+/* Infos clés : cartes crème qui chevauchent le haut de page */
+.faits{margin-top:-2.4rem;position:relative;z-index:2;padding-bottom:2rem}
+.fait{background:var(--carte);border:0;border-radius:18px;box-shadow:var(--ombre)}
+.fait b{color:var(--encre)}
+
+/* Présentation : photos en arche */
+.presente .intro{color:var(--encre)}
+.presente p{color:var(--gris)}
+.ph{border:0;border-radius:18px;background:linear-gradient(160deg,var(--rose-pale),var(--lin));color:var(--gris)}
+.ph:has(img){box-shadow:var(--ombre)}
+.photos-2 .ph:first-child,.galerie .ph.grand{border-radius:999px 999px 18px 18px}
+.photos-2{grid-template-rows:230px 230px}
+
+/* Coup de cœur : vieux rose, photo en arche sur fond cannage */
+.coeur{border-radius:26px;color:#F6F2EB;background:
+  radial-gradient(60% 90% at 100% 0%,rgba(221,191,142,.22),transparent 70%),
+  linear-gradient(135deg,var(--bloc-a),var(--bloc-b));box-shadow:0 24px 48px -26px rgba(0,0,0,.35)}
+.coeur .cote{padding:1.6rem}
+.coeur .cote .ph{background:rgba(255,253,249,.88);color:var(--rose);border-radius:999px 999px 16px 16px;min-height:260px}
+.coeur h2{color:#F6F2EB}
+.coeur p{opacity:.9}
+
+/* ---------- CARTE ---------- */
+.filtres{background:color-mix(in srgb,var(--fond) 92%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.filtres button{border:1.5px solid var(--trait);background:var(--carte);color:var(--gris)}
+.filtres button[aria-pressed="true"]{background:var(--rose);border-color:var(--rose);color:#fff}
+.categorie{border:0;border-radius:20px;box-shadow:var(--ombre);background:var(--carte)}
+.categorie h3::after{content:"";display:block;width:32px;height:2px;border-radius:2px;background:var(--chene);margin-top:.6rem}
+.ligne{border-bottom-color:var(--trait)}
+.prix{color:var(--encre)}
+.etiquette{background:var(--rose-pale);color:var(--encre)}
+.encart{background:var(--rose-pale);border:0;border-radius:18px}
+.vignettes .ph,.vignettes .ph:has(img){border:0;border-radius:999px 999px 16px 16px;box-shadow:var(--ombre)}
+
+/* ---------- INFOS ---------- */
+.carte-info{border:0;border-radius:20px;box-shadow:var(--ombre)}
+.horaires td,.contact{border-bottom-color:var(--trait)}
+.horaires tr.today td{color:var(--rose-2)}
+.contact .ico{background:var(--rose-pale);color:var(--encre);border-radius:14px}
+.plan{border-radius:20px;box-shadow:var(--ombre)}
+.plan .pin{background:var(--rose)}
+.plan .pin::after{background:var(--rotin)}
+.traiteur{border-radius:20px;color:#F6F2EB;background:linear-gradient(135deg,var(--bloc-a),var(--bloc-b))}
+.legal dl{border:0;border-radius:18px;box-shadow:var(--ombre)}
+
+/* ---------- PIED DE PAGE : vieux rose profond + bandeau cannage ---------- */
+footer{background:var(--bloc-b);color:#EEF1EC;position:relative;padding-top:calc(clamp(2.5rem,6vw,3.5rem) + 18px)}
+footer::before{content:"";position:absolute;left:0;right:0;top:0;height:18px}
+footer .foot-grid,footer .foot-bas{border-color:rgba(255,255,255,.12)}
+.foot-grid h4::after{background:var(--rotin);width:32px}
+
+/* ---------- Barre d'onglets mobile ---------- */
+.tabbar button[aria-current="page"]{color:var(--encre)}
+.tabbar button[aria-current="page"] svg{background:var(--rose-pale)}
+
+/* Cadrage des photos */
+.coeur .cote .ph img{object-position:50% 20%}
+.photos-2 .ph:nth-child(2) img{object-position:50% 35%}
+.galerie .ph:nth-child(2) img{object-position:50% 85%}
+.galerie .ph:nth-child(6) img{object-position:50% 60%}
+
+@media (max-width:820px){
+  .faits{margin-top:-2rem}
+  .photos-2{grid-template-rows:170px 170px}
+  .coeur{border-radius:22px}
+  .coeur .cote .ph{min-height:220px}
+}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ======================= EN-TÊTE ======================= -->
+<header class="top">
+  <div class="wrap">
+    <a href="#accueil" class="logo" data-go="accueil" aria-label="La Belle Pause, accueil">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#9E5664"/><circle cx="20" cy="20" r="15.5" fill="none" stroke="#F6F2EB" stroke-width="1"/><path d="M12.5 18h12v3.5a6 6 0 0 1-12 0Z" fill="#F6F2EB"/><path d="M24.5 19h1.4a2.1 2.1 0 0 1 0 4.2h-1.9" fill="none" stroke="#F6F2EB" stroke-width="1.4"/><path d="M16 15.5c0-1.2 1.2-1.2 1.2-2.4M19.5 15.5c0-1.2 1.2-1.2 1.2-2.4" fill="none" stroke="#DDBF8E" stroke-width="1.2" stroke-linecap="round"/><path d="M11 27.5h18" stroke="#DDBF8E" stroke-width="1.2" stroke-linecap="round"/></svg>
+      La Belle Pause
+    </a>
+    <nav class="nav-desk" aria-label="Navigation">
+      <button data-go="accueil">Accueil</button>
+      <button data-go="carte">La carte</button>
+      <button data-go="galerie">Galerie</button>
+      <button data-go="infos">Infos & contact</button>
+    </nav>
+    <a class="call-top" href="tel:+33369613161" aria-label="Appeler La Belle Pause">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg>
+    </a>
+  </div>
+</header>
+
+<main>
+<!-- ======================= ONGLET ACCUEIL ======================= -->
+<div class="page" id="accueil">
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <span class="status" data-status><i></i><em style="font-style:normal">…</em></span>
+        <h1>La belle pause.</h1>
+        <p class="lede">Salon de thé et café à Ostwald. Thés, cafés, pâtisseries maison et plats du jour, sur place ou à emporter.</p>
+        <div class="actions">
+          <button class="btn btn-encre" data-go="carte">Voir la carte</button>
+          <a class="btn btn-ligne" href="tel:+33369613161">Appeler</a>
+        </div>
+      </div>
+      <div class="assiette" aria-hidden="true">
+        <div class="nappe kelsch"></div>
+        <svg viewBox="0 0 400 400">
+          <defs><radialGradient id="g" cx="45%" cy="40%" r="65%"><stop offset="0" stop-color="#FFF4CC"/><stop offset=".7" stop-color="#F9DE8C"/><stop offset="1" stop-color="#EDB94F"/></radialGradient></defs>
+          <circle cx="200" cy="200" r="196" fill="#fff"/>
+          <circle cx="200" cy="200" r="186" fill="none" stroke="#9E5664" stroke-width="3" stroke-dasharray="2 9"/>
+          <path d="M200 200 L200 48 A152 152 0 1 0 331.6 124 Z" fill="#E3AC3F"/>
+          <path d="M200 200 L200 62 A138 138 0 1 0 319.5 131 Z" fill="url(#g)"/>
+          <g fill="#E3AC3F" opacity=".35"><circle cx="150" cy="170" r="14"/><circle cx="230" cy="260" r="18"/><circle cx="130" cy="265" r="9"/></g>
+          <g class="part"><path d="M200 200 L200 48 A152 152 0 0 1 331.6 124 Z" fill="#E3AC3F"/><path d="M204 192 L204 62 A138 138 0 0 1 319.5 131 Z" fill="url(#g)"/></g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="faits">
+      <div class="fait"><b>Lun – Ven</b><span>10h – 18h, 18h30 le mercredi</span></div>
+      <div class="fait"><b>Fait maison</b><span>Pâtisseries et plats du jour</span></div>
+      <div class="fait"><b>Traiteur</b><span>Sur commande, par téléphone</span></div>
+    </div>
+
+    <section class="bloc presente">
+      <div>
+        <h2>Bienvenue</h2>
+        <p class="intro">Un salon de thé ouvert en 2024, rue de l'Île des Pêcheurs.</p>
+        <p>On y passe pour un café, un thé l'après-midi ou le plat du jour à midi. Les pâtisseries sont faites maison et le choix de thés est large : noirs, verts, fruités, épicés.</p>
+        <p>Les clients parlent surtout de l'accueil, chaleureux et attentionné, et d'une ambiance calme où l'on prend son temps.</p>
+      </div>
+      <div class="photos-2">
+        <figure class="ph"><img src="img/salle.jpg" alt="La salle : tables en bois clair, chaises crème et suspensions en rotin" onerror="this.remove()"><span>img/salle.jpg<br>la salle</span></figure>
+        <figure class="ph"><img src="img/comptoir.jpg" alt="La vitrine : tartes, éclairs, donuts et viennoiseries" onerror="this.remove()"><span>img/comptoir.jpg</span></figure>
+        <figure class="ph"><img src="img/devanture.jpg" alt="La devanture et la terrasse de La Belle Pause" onerror="this.remove()"><span>img/devanture.jpg</span></figure>
+      </div>
+    </section>
+
+    <div class="coeur">
+      <div class="cote"><figure class="ph"><img src="img/tarte-fromage-blanc.jpg" alt="Tarte au fromage blanc et tartelettes maison" onerror="this.remove()"><span>img/tarte-fromage-blanc.jpg</span></figure></div>
+      <div class="txt">
+        <h2>La tarte au fromage blanc</h2>
+        <p>Le dessert que les clients citent le plus souvent dans leurs avis. À goûter avec un thé ou un café.</p>
+        <button class="btn btn-dore" data-go="carte" style="margin-top:1rem">Voir toute la carte</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= ONGLET CARTE ======================= -->
+<div class="page" id="carte">
+  <div class="wrap">
+    <div class="page-head">
+      <h2>La carte</h2>
+      <p>Les pâtisseries et le plat du jour changent régulièrement. Demandez au comptoir ce qui est disponible aujourd'hui.</p>
+    </div>
+
+    <div class="filtres" role="group" aria-label="Filtrer la carte">
+      <button aria-pressed="true" data-f="tout">Tout</button>
+      <button aria-pressed="false" data-f="chaud">Boissons chaudes</button>
+      <button aria-pressed="false" data-f="frais">Boissons fraîches</button>
+      <button aria-pressed="false" data-f="sucre">Sucré</button>
+      <button aria-pressed="false" data-f="sale">Salé</button>
+    </div>
+
+    <!-- ===========================================================
+         PRIX : remplacez "Prix sur place" par le tarif réel (ex. 3,90 €)
+         dès que vous avez la carte de la gérante.
+         =========================================================== -->
+    <div class="grille-carte">
+      <div class="categorie" data-cat="chaud">
+        <h3>Boissons chaudes</h3>
+        <div class="ligne"><div><b>Thés</b><small>Noirs, verts, fruités et épicés</small></div><span class="prix">Prix sur place</span></div>
+        <div class="ligne"><div><b>Cafés</b><small>Dont cappuccino</small></div><span class="prix">Prix sur place</span></div>
+        <div class="ligne"><div><b>Chocolat chaud</b></div><span class="prix">Prix sur place</span></div>
+        <div class="ligne"><div><b>Vin chaud</b><span class="etiquette">En saison</span><small>Pendant l'hiver</small></div><span class="prix">Prix sur place</span></div>
+      </div>
+      <div class="categorie" data-cat="frais">
+        <h3>Boissons fraîches</h3>
+        <div class="ligne"><div><b>Jus de fruits frais</b></div><span class="prix">Prix sur place</span></div>
+        <div class="ligne"><div><b>Smoothies</b></div><span class="prix">Prix sur place</span></div>
+      </div>
+      <div class="categorie" data-cat="sucre">
+        <h3>Sucré</h3>
+        <div class="ligne"><div><b>Tarte au fromage blanc</b><span class="etiquette">Coup de cœur</span></div><span class="prix">Prix sur place</span></div>
+        <div class="ligne"><div><b>Pâtisseries maison</b><small>Selon le jour</small></div><span class="prix">Prix sur place</span></div>
+      </div>
+      <div class="categorie" data-cat="sale">
+        <h3>Salé</h3>
+        <div class="ligne"><div><b>Plat du jour</b><small>Fait maison, change chaque jour</small></div><span class="prix">Prix sur place</span></div>
+        <div class="ligne"><div><b>Quiches et sandwichs</b><small>Pour une petite faim</small></div><span class="prix">Prix sur place</span></div>
+      </div>
+    </div>
+
+    <div class="encart">
+      <span style="font-size:1.4rem">🍽️</span>
+      <p><strong>Tout est disponible à emporter.</strong> Pour une commande traiteur, appelez le 03 69 61 31 61.</p>
+    </div>
+
+    <!-- Vignettes 160x160 à bordure dorée, comme sur l'AK Vigie -->
+    <div class="vignettes">
+      <figure class="ph"><img src="img/carte-matcha.jpg" alt="Matcha latte" onerror="this.remove()"><span>carte-matcha.jpg</span></figure>
+      <figure class="ph"><img src="img/carte-latte.jpg" alt="Latte macchiato" onerror="this.remove()"><span>carte-latte.jpg</span></figure>
+      <figure class="ph"><img src="img/carte-cappuccino.jpg" alt="Cappuccino" onerror="this.remove()"><span>carte-cappuccino.jpg</span></figure>
+      <figure class="ph"><img src="img/carte-tarte-meringuee.jpg" alt="Tarte meringuée maison" onerror="this.remove()"><span>carte-tarte-meringuee.jpg</span></figure>
+      <figure class="ph"><img src="img/carte-patisseries.jpg" alt="Éclairs et tartelettes meringuées" onerror="this.remove()"><span>carte-patisseries.jpg</span></figure>
+      <figure class="ph"><img src="img/carte-bagel.jpg" alt="Bagel garni" onerror="this.remove()"><span>carte-bagel.jpg</span></figure>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= ONGLET GALERIE ======================= -->
+<div class="page" id="galerie">
+  <div class="wrap">
+    <div class="page-head">
+      <h2>Galerie</h2>
+      <p>La salle, le comptoir et ce qui sort de la cuisine. Retrouvez les nouveautés sur Instagram.</p>
+    </div>
+    <div class="galerie">
+      <figure class="ph grand"><img src="img/galerie-1.jpg" alt="La terrasse au soleil" onerror="this.remove()"><span>galerie-1.jpg<br>photo phare</span></figure>
+      <figure class="ph"><img src="img/galerie-2.jpg" alt="Un cappuccino au comptoir" onerror="this.remove()"><span>galerie-2.jpg</span></figure>
+      <figure class="ph"><img src="img/galerie-3.jpg" alt="Tartes et tartelettes maison" onerror="this.remove()"><span>galerie-3.jpg</span></figure>
+      <figure class="ph large"><img src="img/galerie-4.jpg" alt="La vitrine des pâtisseries" onerror="this.remove()"><span>galerie-4.jpg<br>format paysage</span></figure>
+      <figure class="ph"><img src="img/galerie-5.jpg" alt="Bagel garni" onerror="this.remove()"><span>galerie-5.jpg</span></figure>
+      <figure class="ph"><img src="img/galerie-6.jpg" alt="Matcha latte" onerror="this.remove()"><span>galerie-6.jpg</span></figure>
+      <figure class="ph large"><img src="img/galerie-7.jpg" alt="La salle" onerror="this.remove()"><span>galerie-7.jpg<br>format paysage</span></figure>
+    </div>
+    <div style="text-align:center;margin:2rem 0 3rem">
+      <a class="btn btn-ligne" href="https://www.instagram.com/labellepauseostwald/" target="_blank" rel="noopener">Voir @labellepauseostwald</a>
+    </div>
+  </div>
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo agrandie">
+    <button aria-label="Fermer">✕</button><img alt="">
+  </div>
+</div>
+
+<!-- ======================= ONGLET INFOS & CONTACT ======================= -->
+<div class="page" id="infos">
+  <div class="wrap">
+    <div class="page-head">
+      <h2>Infos & contact</h2>
+      <p><span class="status" data-status><i></i><em style="font-style:normal">…</em></span></p>
+    </div>
+    <div class="infos">
+      <div class="carte-info">
+        <h3>Horaires</h3>
+        <table class="horaires" id="horaires">
+          <tr data-d="1"><td>Lundi</td><td>10h – 18h</td></tr>
+          <tr data-d="2"><td>Mardi</td><td>10h – 18h</td></tr>
+          <tr data-d="3"><td>Mercredi</td><td>10h – 18h30</td></tr>
+          <tr data-d="4"><td>Jeudi</td><td>10h – 18h</td></tr>
+          <tr data-d="5"><td>Vendredi</td><td>10h – 18h</td></tr>
+          <tr data-d="6" class="ferme"><td>Samedi</td><td>Fermé</td></tr>
+          <tr data-d="0" class="ferme"><td>Dimanche</td><td>Fermé</td></tr>
+        </table>
+      </div>
+      <div class="carte-info">
+        <h3>Nous trouver</h3>
+        <a class="contact" href="tel:+33369613161">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg></span>
+          <div><small>Téléphone</small><span>03 69 61 31 61</span></div>
+        </a>
+        <a class="contact" href="https://www.google.com/maps/search/?api=1&query=La+Belle+Pause+3+rue+de+l%27Ile+des+Pecheurs+67540+Ostwald" target="_blank" rel="noopener">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.3 7-12a7 7 0 0 0-14 0c0 5.7 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg></span>
+          <div><small>Adresse</small><span>3 rue de l'Île des Pêcheurs, 67540 Ostwald</span></div>
+        </a>
+        <a class="contact" href="https://www.instagram.com/labellepauseostwald/" target="_blank" rel="noopener">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></span>
+          <div><small>Instagram</small><span>@labellepauseostwald</span></div>
+        </a>
+      </div>
+      <a class="plan kelsch" href="https://www.google.com/maps/dir/?api=1&destination=3+rue+de+l%27Ile+des+Pecheurs+67540+Ostwald" target="_blank" rel="noopener">
+        <div class="rue" style="left:0;right:0;top:36%;height:16px"></div>
+        <div class="rue" style="left:62%;width:16px;top:0;bottom:0"></div>
+        <div class="pin" aria-hidden="true"></div>
+        <span class="btn btn-encre" style="position:relative">Obtenir l'itinéraire</span>
+      </a>
+      <div class="traiteur">
+        <div><h3>Service traiteur</h3><p>Pour une réunion, un anniversaire ou un événement : appelez pour en parler et passer commande.</p></div>
+        <a class="btn btn-dore" href="tel:+33369613161">Appeler le 03 69 61 31 61</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= MENTIONS LÉGALES (loi LCEN, art. 6) ======================= -->
+<!-- ⚠️ À faire valider par la gérante avant mise en ligne : directrice de publication,
+     e-mail éventuel et crédits photos. -->
+<div class="page" id="mentions">
+  <div class="wrap legal">
+    <div class="page-head"><h2>Mentions légales</h2></div>
+
+    <h3>Éditeur du site</h3>
+    <dl>
+      <dt>Dénomination</dt><dd>LA BELLE PAUSE</dd>
+      <dt>Forme juridique</dt><dd>SASU (société par actions simplifiée unipersonnelle) au capital de 500 €</dd>
+      <dt>Siège social</dt><dd>3 rue de l'Île des Pêcheurs, 67540 Ostwald</dd>
+      <dt>RCS</dt><dd>Strasbourg 931 243 067</dd>
+      <dt>SIRET</dt><dd>931 243 067 00010</dd>
+      <dt>TVA intracommunautaire</dt><dd>FR09 931 243 067</dd>
+      <dt>Code APE</dt><dd>5610C</dd>
+      <dt>Téléphone</dt><dd><a href="tel:+33369613161">03 69 61 31 61</a></dd>
+      <dt>Directrice de la publication</dt><dd>Cansu Olmez, présidente</dd>
+    </dl>
+
+    <h3>Hébergement</h3>
+    <dl>
+      <dt>Hébergeur</dt><dd>Hostinger International Ltd.</dd>
+      <dt>Adresse</dt><dd>61 Lordou Vironos Street, Lumiel Building, 4e étage, 6023 Larnaca, Chypre</dd>
+      <dt>Site</dt><dd><a href="https://www.hostinger.fr" target="_blank" rel="noopener">hostinger.fr</a></dd>
+    </dl>
+
+    <h3>Conception et réalisation</h3>
+    <p>Site conçu et développé par Benjamin Monteiro, développeur web freelance.</p>
+
+    <h3>Propriété intellectuelle</h3>
+    <p>L'ensemble des contenus de ce site (textes, photographies, logo, mise en page) est la propriété de La Belle Pause ou de ses auteurs. Toute reproduction, même partielle, sans autorisation écrite préalable est interdite.</p>
+    <p>Polices de caractères : Gloock et Instrument Sans, sous licence SIL Open Font License.</p>
+
+    <h3>Responsabilité</h3>
+    <p>Les informations du site (horaires, carte, produits) sont données à titre indicatif et peuvent évoluer. Les prix en vigueur sont ceux affichés en boutique. Les liens vers des sites externes (Google Maps, Instagram) sont fournis pour faciliter la navigation ; La Belle Pause n'est pas responsable de leur contenu.</p>
+
+    <h3>Allergènes</h3>
+    <p>Conformément au règlement européen INCO n° 1169/2011, la liste des allergènes présents dans nos produits est disponible sur simple demande au comptoir.</p>
+
+    <button class="btn btn-ligne retour" data-go="accueil">Retour à l'accueil</button>
+  </div>
+</div>
+
+<!-- ======================= CONFIDENTIALITÉ (RGPD) ======================= -->
+<div class="page" id="confidentialite">
+  <div class="wrap legal">
+    <div class="page-head"><h2>Confidentialité & cookies</h2></div>
+
+    <h3>Données personnelles</h3>
+    <p>Ce site est une vitrine d'information. Il ne comporte aucun formulaire, aucun compte client et ne collecte aucune donnée personnelle.</p>
+    <p>Si vous nous contactez par téléphone ou via Instagram, les informations échangées servent uniquement à répondre à votre demande (par exemple une commande traiteur) et ne sont ni revendues ni transmises à des tiers.</p>
+
+    <h3>Cookies</h3>
+    <p>Ce site ne dépose aucun cookie et n'utilise aucun outil de mesure d'audience ni de publicité. C'est pourquoi aucun bandeau de consentement ne s'affiche.</p>
+    <p>Les polices de caractères sont hébergées directement avec le site : aucune donnée n'est transmise à un service tiers lors de votre visite.</p>
+
+    <h3>Liens externes</h3>
+    <p>Les boutons « Itinéraire » et « Instagram » ouvrent des services tiers (Google Maps, Instagram) qui appliquent leur propre politique de confidentialité et peuvent déposer leurs cookies.</p>
+
+    <h3>Hébergement et journaux techniques</h3>
+    <p>Le site est hébergé par Hostinger. Comme tout hébergeur, Hostinger peut enregistrer l'adresse IP des visiteurs dans ses journaux techniques, à des fins de sécurité, selon sa propre politique de confidentialité.</p>
+
+    <h3>Vos droits</h3>
+    <p>Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour l'exercer, contactez La Belle Pause au 03 69 61 31 61 ou par courrier au 3 rue de l'Île des Pêcheurs, 67540 Ostwald. Vous pouvez aussi saisir la CNIL (cnil.fr).</p>
+
+    <button class="btn btn-ligne retour" data-go="accueil">Retour à l'accueil</button>
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-logo">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#9E5664"/><circle cx="20" cy="20" r="15.5" fill="none" stroke="#F6F2EB" stroke-width="1"/><path d="M12.5 18h12v3.5a6 6 0 0 1-12 0Z" fill="#F6F2EB"/><path d="M24.5 19h1.4a2.1 2.1 0 0 1 0 4.2h-1.9" fill="none" stroke="#F6F2EB" stroke-width="1.4"/><path d="M16 15.5c0-1.2 1.2-1.2 1.2-2.4M19.5 15.5c0-1.2 1.2-1.2 1.2-2.4" fill="none" stroke="#DDBF8E" stroke-width="1.2" stroke-linecap="round"/><path d="M11 27.5h18" stroke="#DDBF8E" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <div class="foot-big" style="margin:0">La Belle Pause</div>
+      <p>Salon de thé & café à Ostwald</p>
+    </div>
+    <div class="foot-grid">
+      <div>
+        <h4>Nous trouver</h4>
+        <p>3 rue de l'Île des Pêcheurs<br>67540 Ostwald</p>
+        <p><a href="tel:+33369613161">03 69 61 31 61</a></p>
+      </div>
+      <div>
+        <h4>Horaires</h4>
+        <p>Lundi, mardi, jeudi, vendredi : 10h – 18h</p>
+        <p>Mercredi : 10h – 18h30</p>
+        <p>Samedi et dimanche : fermé</p>
+      </div>
+      <div>
+        <h4>Informations</h4>
+        <ul>
+          <li><button data-go="mentions">Mentions légales</button></li>
+          <li><button data-go="confidentialite">Confidentialité & cookies</button></li>
+          <li><a href="https://www.instagram.com/labellepauseostwald/" target="_blank" rel="noopener">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bas">
+      <span>© <span id="annee"></span> LA BELLE PAUSE, SASU au capital de 500 € · RCS Strasbourg 931 243 067</span>
+      <span>Site sans cookie · Allergènes disponibles sur demande</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ======================= BARRE D'ONGLETS MOBILE ======================= -->
+<nav class="tabbar" aria-label="Navigation mobile">
+  <button data-go="accueil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/></svg>Accueil</button>
+  <button data-go="carte"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a3 3 0 0 1 0 6h-1"/><path d="M3 8h14v7a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5Z"/><path d="M7 2v2M11 2v2"/></svg>Carte</button>
+  <button data-go="galerie"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>Galerie</button>
+  <button data-go="infos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Infos</button>
+</nav>
+
+<!--
+  =====================================================================
+  STRUCTURE SUR HOSTINGER (Gestionnaire de fichiers → public_html) :
+    public_html/index.html   ← ce fichier
+    public_html/favicon.svg, favicon-32.png, apple-touch-icon.png ← icônes d'onglet
+    public_html/img/         ← les photos
+    public_html/fonts/       ← les 4 polices .woff2
+  LISTE DES PHOTOS À DÉPOSER DANS /img (noms exacts, JPG, ~1600px max)
+  Accueil : salle.jpg, comptoir.jpg, devanture.jpg, tarte-fromage-blanc.jpg
+  Carte   : carte-matcha.jpg, carte-latte.jpg, carte-cappuccino.jpg,
+            carte-tarte-meringuee.jpg, carte-patisseries.jpg, carte-bagel.jpg
+  Galerie : galerie-1.jpg à galerie-7.jpg (4 et 7 en format paysage)
+  =====================================================================
+-->
+
+<script>
+/* Horaires : jour (0 = dimanche) → [ouverture, fermeture] en minutes */
+const HORAIRES = {0:null,1:[600,1080],2:[600,1080],3:[600,1110],4:[600,1080],5:[600,1080],6:null};
+const JOURS = ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
+const fmt = x => Math.floor(x/60)+"h"+(x%60 ? String(x%60).padStart(2,"0") : "");
+
+function statut(){
+  const now = new Date(new Date().toLocaleString("en-US",{timeZone:"Europe/Paris"}));
+  const d = now.getDay(), m = now.getHours()*60 + now.getMinutes(), h = HORAIRES[d];
+  let open = false, txt;
+  if (h && m >= h[0] && m < h[1]) { open = true; txt = "Ouvert jusqu'à " + fmt(h[1]); }
+  else if (h && m < h[0]) txt = "Fermé · ouvre à " + fmt(h[0]);
+  else {
+    let n = 1; while (!HORAIRES[(d+n)%7]) n++;
+    const j = (d+n)%7;
+    txt = "Fermé · réouverture " + (n === 1 ? "demain" : JOURS[j]) + " à " + fmt(HORAIRES[j][0]);
+  }
+  document.querySelectorAll("[data-status]").forEach(el => {
+    el.classList.toggle("open", open); el.querySelector("em").textContent = txt;
+  });
+  document.querySelectorAll("#horaires tr").forEach(r => r.classList.toggle("today", +r.dataset.d === d));
+}
+statut(); setInterval(statut, 60000);
+document.getElementById("annee").textContent = new Date().getFullYear();
+
+/* Navigation par onglets */
+const PAGES = ["accueil","carte","galerie","infos","mentions","confidentialite"];
+function aller(id, push){
+  if (!PAGES.includes(id)) id = "accueil";
+  document.querySelectorAll(".page").forEach(p => p.classList.toggle("active", p.id === id));
+  document.querySelectorAll("[data-go]").forEach(b => {
+    if (b.tagName !== "BUTTON") return;
+    if (b.dataset.go === id) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current");
+  });
+  if (push) { try { history.replaceState(null, "", "#" + id); } catch (e) { /* aperçu sandboxé : on ignore */ } }
+  window.scrollTo(0, 0);
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-go]");
+  if (b) { e.preventDefault(); aller(b.dataset.go, true); }
+});
+aller(location.hash.slice(1));
+
+/* Filtres de la carte */
+const filtres = document.querySelectorAll(".filtres button");
+filtres.forEach(f => f.addEventListener("click", () => {
+  filtres.forEach(x => x.setAttribute("aria-pressed", x === f));
+  document.querySelectorAll(".categorie").forEach(c => {
+    c.hidden = !(f.dataset.f === "tout" || c.dataset.cat === f.dataset.f);
+  });
+}));
+
+/* Filtres de la carte : fond flouté quand ils restent collés en haut */
+const barre = document.querySelector(".filtres");
+addEventListener("scroll", () => barre.classList.toggle("colle", barre.getBoundingClientRect().top <= parseInt(getComputedStyle(document.documentElement).getPropertyValue("--nav-h")) + 1), {passive:true});
+
+/* Agrandissement des photos de la galerie */
+const lb = document.getElementById("lightbox"), lbImg = lb.querySelector("img");
+document.querySelectorAll(".galerie .ph").forEach(ph => ph.addEventListener("click", () => {
+  const img = ph.querySelector("img"); if (!img) return;
+  lbImg.src = img.src; lbImg.alt = img.alt; lb.classList.add("on");
+}));
+lb.addEventListener("click", e => { if (e.target !== lbImg) lb.classList.remove("on"); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") lb.classList.remove("on"); });
+</script>
+</body>
+</html>
